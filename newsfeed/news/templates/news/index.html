@@ -1,0 +1,956 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+  <meta charset="utf-8">
+  <title>Live News Feed</title>
+  <!-- Bootstrap CDN -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+
+  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&family=Source+Sans+Pro:ital,wght@0,400;0,600;0,700;1,400;1,600&display=swap" rel="stylesheet">
+  <script src="https://kit.fontawesome.com/64b483cfec.js" crossorigin="anonymous"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.js"></script>
+
+  <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+
+  <style media="screen">
+    body {
+      background-color: #2b2b2b;
+      color: white;
+      font-family: 'Source Sans Pro', sans-serif;
+    }
+
+    .watchlist {
+      font-family: 'Source Sans Pro', sans-serif;
+      background-color: #2b2b2b;
+      padding: 1% 0 3% 0;
+    }
+
+    .watchlist-row{
+      margin-left: auto;
+      margin-right: auto;
+      border-bottom: solid white 1px;
+    }
+
+    .up-arrow {
+      color: #3fcc6f;
+      padding-right: 10px;
+      padding-left: 5%;
+      padding-top: 18px;
+    }
+
+    .down-arrow {
+      color: #fd6e70;
+      padding-right: 10px;
+      padding-left: 5%;
+      padding-top: 18px;
+
+    }
+    .stat-text{
+      margin-bottom: 0.3125rem;
+    }
+
+    .fa-2x { transform: scale(1,2); }
+
+    .card-img{
+      height: 100%;
+    }
+
+    .bottom-left {
+		position: absolute;
+		bottom: 150px;
+    }
+
+    .center-img{
+  		opacity:0.5;
+  		background-color: black;
+  	}
+
+    .headings-column{
+      font-size: 1.75rem;
+      border-style: solid white 1px;
+      border-radius: 30px;
+      margin: auto;
+      color: white;
+    }
+
+    .scroll-down-icon{
+      margin-top: 9%;
+    }
+
+    .section-divider{
+      margin-bottom:5%;
+    }
+
+
+  </style>
+</head>
+
+
+<body>
+
+
+  <!-- <section id="marquee-tag">
+    <div class="container-fluid thia">
+    <marquee width="100%" direction="left" height="100px" scrollamount="5">
+      {% for item in query_results4 %}
+                {{item.name}}
+                {{item.price}}
+      {% endfor %}
+    </marquee>
+  </div>
+  </section> -->
+
+
+
+  <section id="fx">
+    <div class="container-fluid watchlist">
+      <div class="row watchlist-row" style="padding-top:10px; padding-bottom:10px;">
+        {% for item in query_results1 %}
+        <div class="col-sm-2">
+              <div class="row">
+                {% if item.pnl < 0 %}
+                <i class="fas fa-long-arrow-alt-down fa-2x down-arrow"></i>
+                {% else %}
+                <i class="fas fa-long-arrow-alt-up fa-2x up-arrow"></i>
+                {% endif %}
+                <div>
+                  <h6 class="stat-text" style="font-weight:600;">{{item.name}}</h6>
+                  <h6 class="stat-text">{{item.price}}</h6>
+                  {% if item.pnl < 0 %}
+                  <h6 style="color:#fd6e70;">{{item.pnl}}   {{item.pnlper}}%</h6>
+                  {% else %}
+                  <h6 style="color:#3fcc6f;">+{{item.pnl}}   +{{item.pnlper}}%</h6>
+                  {% endif %}
+                </div>
+              </div>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+
+    <div class="container-fluid section-divider">
+      <div class="container">
+        <div class="row" style="text-align:center; margin-bottom:2.5%;">
+          <div class="col-md-4 headings-column bg-dark" style="position:relative; right:9%;">
+            IN-SHORTS
+          </div>
+          <div class="col-md-4 headings-column bg-dark">
+            FX-NEWS
+          </div>
+          <div class="col-md-4 headings-column bg-dark" style="position:relative; left:9%;">
+            CHARTS
+          </div>
+
+        </div>
+
+      </div>
+
+      <div class="row">
+          <div class="col-md-4">
+        		<div class="container-fluid">
+              {% for item in query_results6 %}
+        			<div class="row">
+        				<div class="card mb-3 bg-dark" style="width:28rem;">
+        					  <div class="row no-gutters">
+        						<div class="col-md-4">
+        							<img class="card-img" src={{item.imgurl}} alt="Card image">
+        						</div>
+        						<div class="col-md-8">
+        						  <div class="card-body bg-dark">
+        								<h5 class="card-title text-white">{{item.headline}}</h5>
+        						  </div>
+        						</div>
+        					  </div>
+        					</div>
+        			</div>
+              {% endfor %}
+        		</div>
+        	</div>
+
+        <div class="col-md-4">
+          <div class="container-fluid">
+        			<div class="card bg-dark text-white">
+        			  <img class="card-img center-img" src={{imglink3}} alt="Card image">
+        			  <div class="card-img-overlay">
+        				 <div class="bottom-left"><h2 class="card-title-img"><strong>{{fxcenter}}</strong></h2></div>
+        			  </div>
+        			  <p class="card-footer bg-dark text-white">{{context}}</p>
+        			</div>
+
+              <div class="" style="text-align:center;">
+                <a href="#indexes"><i class="fas fa-chevron-down fa-3x scroll-down-icon"></i></a>
+              </div>
+        	</div>
+
+        </div>
+        <div class="col-md-4">
+          <div class="container-fluid">
+            <div class="row text-white">
+              <canvas  id="chart3"></canvas>
+            </div>
+            <br>
+            <br>
+            <div class="row text-white">
+              <canvas  id="chart2"></canvas>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </section>
+
+
+
+
+  <section id="indexes">
+    <div class="container-fluid watchlist">
+      <div class="row watchlist-row" style="padding-top:10px; padding-bottom:10px;">
+        {% for item in query_results2 %}
+        <div class="col-sm-2">
+              <div class="row">
+                {% if item.pnl < 0 %}
+                <i class="fas fa-long-arrow-alt-down fa-2x down-arrow"></i>
+                {% else %}
+                <i class="fas fa-long-arrow-alt-up fa-2x up-arrow"></i>
+                {% endif %}
+                <div>
+                  <h6 class="stat-text" style="font-weight:600;">{{item.name}}</h6>
+                  <h6 class="stat-text">{{item.price}}</h6>
+                  {% if item.pnl < 0 %}
+                  <h6 style="color:#fd6e70;">{{item.pnl}}   {{item.pnlper}}%</h6>
+                  {% else %}
+                  <h6 style="color:#3fcc6f;">+{{item.pnl}}   +{{item.pnlper}}%</h6>
+                  {% endif %}
+                </div>
+              </div>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+
+    <div class="container-fluid section-divider">
+      <div class="container">
+        <div class="row" style="text-align:center; margin-bottom:2.5%;">
+          <div class="col-md-4 headings-column bg-dark" style="position:relative; right:9%;">
+            IN-SHORTS
+          </div>
+          <div class="col-md-4 headings-column bg-dark">
+            INDEX-NEWS
+          </div>
+          <div class="col-md-4 headings-column bg-dark" style="position:relative; left:9%;">
+            CHARTS
+          </div>
+
+        </div>
+
+      </div>
+
+      <div class="row">
+          <div class="col-md-4">
+        		<div class="container-fluid">
+              {% for item in query_results3 %}
+        			<div class="row">
+        				<div class="card mb-3 bg-dark" style="width:28rem;">
+        					  <div class="row no-gutters">
+        						<div class="col-md-4">
+        							<img class="card-img" src={{item.imgurl}} alt="Card image">
+        						</div>
+        						<div class="col-md-8">
+        						  <div class="card-body bg-dark">
+        								<h5 class="card-title text-white">{{item.headline}}</h5>
+        						  </div>
+        						</div>
+        					  </div>
+        					</div>
+        			</div>
+              {% endfor %}
+        		</div>
+        	</div>
+
+        <div class="col-md-4">
+          <div class="container-fluid">
+        			<div class="card bg-dark text-white">
+        			  <img class="card-img center-img" src={{index_centerimgurl}} alt="Card image">
+        			  <div class="card-img-overlay">
+        				 <div class="bottom-left"><h2 class="card-title-img"><strong>{{index_centertitle}}</strong></h2></div>
+        			  </div>
+        			  <p class="card-footer bg-dark text-white">{{index_centerdescription}}</p>
+        			</div>
+
+              <div class="" style="text-align:center;">
+                <a href="#equities"><i class="fas fa-chevron-down fa-3x scroll-down-icon"></i></a>
+              </div>
+        	</div>
+
+        </div>
+        <div class="col-md-4">
+          <div class="container-fluid">
+            <div class="row text-white">
+              <canvas  id="chart"></canvas>
+            </div>
+            <br>
+            <br>
+            <div class="row text-white">
+              <canvas  id="chart5"></canvas>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <!-- Equities Page -->
+    <section id="equities">
+      <div class="container-fluid watchlist">
+        <div class="row watchlist-row" style="padding-top:10px; padding-bottom:10px;">
+          {% for item in query_results4 %}
+          <div class="col-sm-2">
+                <div class="row">
+                  {% if item.pnl < 0 %}
+                  <i class="fas fa-long-arrow-alt-down fa-2x down-arrow"></i>
+                  {% else %}
+                  <i class="fas fa-long-arrow-alt-up fa-2x up-arrow"></i>
+                  {% endif %}
+                  <div>
+                    <h6 class="stat-text" style="font-weight:600;">{{item.name}}</h6>
+                    <h6 class="stat-text">{{item.price}}</h6>
+                    {% if item.pnl < 0 %}
+                    <h6 style="color:#fd6e70;">{{item.pnl}}   {{item.pnlper}}%</h6>
+                    {% else %}
+                    <h6 style="color:#3fcc6f;">+{{item.pnl}}   +{{item.pnlper}}%</h6>
+                    {% endif %}
+                  </div>
+                </div>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+
+      <div class="container-fluid section-divider">
+        <div class="container">
+          <div class="row" style="text-align:center; margin-bottom:2.5%;">
+            <div class="col-md-4 headings-column bg-dark" style="position:relative; right:9%;">
+              IN-SHORTS
+            </div>
+            <div class="col-md-4 headings-column bg-dark">
+              EQUITIES-NEWS
+            </div>
+            <div class="col-md-4 headings-column bg-dark" style="position:relative; left:9%;">
+              CHARTS
+            </div>
+
+          </div>
+
+        </div>
+
+        <div class="row">
+            <div class="col-md-4">
+          		<div class="container-fluid">
+                {% for item in query_results5 %}
+          			<div class="row">
+          				<div class="card mb-3 bg-dark" style="width:28rem;">
+          					  <div class="row no-gutters">
+          						<div class="col-md-4">
+          							<img class="card-img" src={{item.imgurl}} alt="Card image">
+          						</div>
+          						<div class="col-md-8">
+          						  <div class="card-body bg-dark">
+          								<h5 class="card-title text-white">{{item.headline}}</h5>
+          						  </div>
+          						</div>
+          					  </div>
+          					</div>
+          			</div>
+                {% endfor %}
+          		</div>
+          	</div>
+
+          <div class="col-md-4">
+            <div class="container-fluid">
+          			<div class="card bg-dark text-white">
+          			  <img class="card-img center-img" src={{imgURL_center_eq}} alt="Card image">
+          			  <div class="card-img-overlay">
+          				 <div class="bottom-left"><h2 class="card-title-img"><strong>{{title_center_eq}}</strong></h2></div>
+          			  </div>
+          			  <p class="card-footer bg-dark text-white">{{desc_center_eq}}</p>
+          			</div>
+
+                <div class="" style="text-align:center;">
+                  <a href="#fx"><i class="fas fa-chevron-up fa-3x scroll-down-icon"></i></a>
+                </div>
+          	</div>
+
+          </div>
+          <div class="col-md-4">
+            <div class="container-fluid">
+              <div class="row text-white">
+                <canvas  id="lineChart4"></canvas>
+              </div>
+              <br>
+              <br>
+              <div class="row text-white">
+                <canvas  id="lineChart5"></canvas>
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+
+
+  <!-- Graph Scripts -->
+
+
+  <!-- Index Graph -->
+    <script >
+
+  var chart    = document.getElementById('chart').getContext('2d'),
+
+  gradient = chart.createLinearGradient(0, 0, 0, 450);
+
+  gradient.addColorStop(0, 'rgba(0,255,0, 0.5)');
+  gradient.addColorStop(0.5, 'rgba(0,255, 0, 0.25)');
+  gradient.addColorStop(1, 'rgba(0,255, 0, 0)');
+
+
+  var data  = {
+      labels:[{% for i in dates %}"{{ i }}",{% endfor %}],
+      datasets: [{
+  			label: 'Dow Jones',
+  			backgroundColor: gradient,
+  			pointBackgroundColor: 'rgba(0,255,0, 0.5)',
+  			borderWidth: 1,
+  			borderColor: 'rgba(0,255,0, 0.5)',
+  			data: {{dow}},
+      }]
+  };
+
+
+  var options = {
+  	responsive: true,
+  	maintainAspectRatio: true,
+  	animation: {
+  		easing: 'easeInOutQuad',
+  		duration: 520
+  	},
+  	scales: {
+  		xAxes: [{
+  			gridLines: {
+  				color: 'rgba(200, 200, 200, 0.05)',
+  				lineWidth: 1
+  			},
+        ticks:{
+          fontColor: "#f7f7f7"
+        }
+  		}],
+  		yAxes: [{
+  			gridLines: {
+  				color: 'rgba(200, 200, 200, 0.08)',
+  				lineWidth: 1
+  			},
+        ticks:{
+          fontColor: "#f7f7f7"
+        }
+  		}]
+  	},
+  	elements: {
+  		line: {
+  			tension: 0
+  		}
+  	},
+  	legend: {
+  		display: true,
+      labels:{
+        fontColor:"#f7f7f7"
+      }
+  	},
+  	point: {
+  		backgroundColor: 'white'
+  	},
+  	tooltips: {
+  		titleFontFamily: 'Open Sans',
+  		backgroundColor: 'rgba(0,0,0,0.3)',
+  		titleFontColor: 'red',
+  		caretSize: 5,
+  		cornerRadius: 2,
+  		xPadding: 10,
+  		yPadding: 10
+  	}
+  };
+
+
+  var chartInstance = new Chart(chart, {
+      type: 'line',
+      data: data,
+  	options: options
+  });
+
+
+    </script>
+
+
+
+    <!-- Sensex Graph -->
+
+    <script >
+
+    var chart5    = document.getElementById('chart5').getContext('2d'),
+
+    gradient = chart5.createLinearGradient(0, 0, 0, 450);
+
+    gradient.addColorStop(0, 'rgba(17,205,239,0.5)');
+    gradient.addColorStop(0.5, 'rgba(17,205,239,0.25)');
+    gradient.addColorStop(1, 'rgba(17,205,239,0)');
+
+
+    var data  = {
+        labels:[{% for i in bsedates %}"{{ i }}",{% endfor %}],
+        datasets: [{
+    			label: "BSE SENSEX",
+    			backgroundColor: gradient,
+    			pointBackgroundColor: 'rgba(17,205,239,0.5)',
+    			borderWidth: 1,
+    			borderColor: 'rgba(17,205,239,0.5)',
+    			data: {{bse}},
+        }]
+    };
+
+
+    var options = {
+    	responsive: true,
+    	maintainAspectRatio: true,
+    	animation: {
+    		easing: 'easeInOutQuad',
+    		duration: 520
+    	},
+    	scales: {
+    		xAxes: [{
+    			gridLines: {
+    				color: 'rgba(200, 200, 200, 0.05)',
+    				lineWidth: 1
+    			},
+          ticks:{
+            fontColor: "#f7f7f7"
+          }
+    		}],
+    		yAxes: [{
+    			gridLines: {
+    				color: 'rgba(200, 200, 200, 0.08)',
+    				lineWidth: 1
+    			},
+          ticks:{
+            fontColor: "#f7f7f7"
+          }
+    		}]
+    	},
+    	elements: {
+    		line: {
+    			tension: 0
+    		}
+    	},
+    	legend: {
+    		display: true,
+        labels:{
+          fontColor:"#f7f7f7"
+        }
+    	},
+    	point: {
+    		backgroundColor: 'white'
+    	},
+    	tooltips: {
+    		titleFontFamily: 'Open Sans',
+    		backgroundColor: 'rgba(0,0,0,0.3)',
+    		titleFontColor: 'red',
+    		caretSize: 5,
+    		cornerRadius: 2,
+    		xPadding: 10,
+    		yPadding: 10
+    	}
+    };
+
+
+    var chartInstance = new Chart(chart5, {
+        type: 'line',
+        data: data,
+    		options: options
+    });
+    </script>
+
+
+
+
+  <!-- Currency Graph 1-->
+
+  <script >
+
+  var chart2    = document.getElementById('chart2').getContext('2d'),
+
+  gradient = chart2.createLinearGradient(0, 0, 0, 450);
+
+  gradient.addColorStop(0, 'rgba(17,205,239,0.5)');
+  gradient.addColorStop(0.5, 'rgba(17,205,239,0.25)');
+  gradient.addColorStop(1, 'rgba(17,205,239,0)');
+
+
+
+
+  var data  = {
+      labels:[{% for i in forexdates %}"{{ i }}",{% endfor %}],
+      datasets: [{
+  			label: "{{pair1}}",
+  			backgroundColor: gradient,
+  			pointBackgroundColor: 'rgba(17,205,239,0.5)',
+  			borderWidth: 1,
+  			borderColor: 'rgba(17,205,239,0.5)',
+  			data: {{rates}},
+      }]
+  };
+
+
+  var options = {
+  	responsive: true,
+  	maintainAspectRatio: true,
+  	animation: {
+  		easing: 'easeInOutQuad',
+  		duration: 520
+  	},
+  	scales: {
+  		xAxes: [{
+  			gridLines: {
+  				color: 'rgba(200, 200, 200, 0.05)',
+  				lineWidth: 1
+  			},
+        ticks:{
+          fontColor: "#f7f7f7"
+        }
+  		}],
+  		yAxes: [{
+  			gridLines: {
+  				color: 'rgba(200, 200, 200, 0.08)',
+  				lineWidth: 1
+  			},
+        ticks:{
+          fontColor: "#f7f7f7"
+        }
+  		}]
+  	},
+  	elements: {
+  		line: {
+  			tension: 0
+  		}
+  	},
+  	legend: {
+  		display: true,
+      labels:{
+        fontColor:"#f7f7f7"
+      }
+  	},
+  	point: {
+  		backgroundColor: 'white'
+  	},
+  	tooltips: {
+  		titleFontFamily: 'Open Sans',
+  		backgroundColor: 'rgba(0,0,0,0.3)',
+  		titleFontColor: 'red',
+  		caretSize: 5,
+  		cornerRadius: 2,
+  		xPadding: 10,
+  		yPadding: 10
+  	}
+  };
+
+
+  var chartInstance = new Chart(chart2, {
+      type: 'line',
+      data: data,
+  		options: options
+  });
+  </script>
+
+
+  <!-- Currency Graph 2-->
+
+  <script >
+
+  var chart3    = document.getElementById('chart3').getContext('2d'),
+
+  gradient = chart3.createLinearGradient(0, 0, 0, 450);
+
+  gradient.addColorStop(0, 'rgba(255, 0,0, 0.5)');
+  gradient.addColorStop(0.5, 'rgba(255, 0, 0, 0.25)');
+  gradient.addColorStop(1, 'rgba(255, 0, 0, 0)');
+
+  var data  = {
+      labels:[{% for i in forexdates2 %}"{{ i }}",{% endfor %}],
+      datasets: [{
+  			label: "{{pair2}}",
+  			backgroundColor: gradient,
+  			pointBackgroundColor: 'rgba(255, 0,0, 0.5)',
+  			borderWidth: 1,
+  			borderColor: '#911215',
+  			data: {{rates2}},
+      }]
+  };
+
+
+  var options = {
+  	responsive: true,
+  	maintainAspectRatio: true,
+  	animation: {
+  		easing: 'easeInOutQuad',
+  		duration: 520
+  	},
+  	scales: {
+  		xAxes: [{
+  			gridLines: {
+  				color: 'rgba(200, 200, 200, 0.05)',
+  				lineWidth: 1
+  			},
+        ticks:{
+          fontColor: "#f7f7f7"
+        }
+  		}],
+  		yAxes: [{
+  			gridLines: {
+  				color: 'rgba(200, 200, 200, 0.08)',
+  				lineWidth: 1
+  			},
+        ticks:{
+          fontColor: "#f7f7f7"
+        }
+  		}]
+  	},
+  	elements: {
+  		line: {
+  			tension: 0
+  		}
+  	},
+  	legend: {
+  		display: true,
+      labels:{
+        fontColor:"#f7f7f7"
+      }
+  	},
+  	point: {
+  		backgroundColor: 'white'
+  	},
+  	tooltips: {
+  		titleFontFamily: 'Open Sans',
+  		backgroundColor: 'rgba(0,0,0,0.3)',
+  		titleFontColor: 'red',
+  		caretSize: 5,
+  		cornerRadius: 1,
+  		xPadding: 10,
+  		yPadding: 10
+  	}
+  };
+
+
+  var chartInstance = new Chart(chart3, {
+      type: 'line',
+      data: data,
+  		options: options
+  });
+  </script>
+
+
+
+  <!-- Equities-chart -->
+  <script >
+
+  var ctx4 = $("#lineChart4");
+
+  //line chart data
+  var data4 = {
+  labels:['AAPL','NFLX','MSFT','AMZN','TSLA','FB'],
+  datasets: [
+   {
+     label:"Previous Market Day Standings (PnL in $)",
+     data: {{diff}},
+     backgroundColor: [
+                  'rgba(255, 99, 132, 0.2)',
+                  'rgba(54, 162, 235, 0.2)',
+                  'rgba(255, 206, 86, 0.2)',
+                  'rgba(75, 192, 192, 0.2)',
+                  'rgba(153, 102, 255, 0.2)',
+                  'rgba(255, 159, 64, 0.2)'
+              ],
+              borderColor: [
+                  'rgba(255, 99, 132, 1)',
+                  'rgba(54, 162, 235, 1)',
+                  'rgba(255, 206, 86, 1)',
+                  'rgba(75, 192, 192, 1)',
+                  'rgba(153, 102, 255, 1)',
+                  'rgba(255, 159, 64, 1)'
+              ],
+              borderWidth: 1
+   }
+  ]
+  };
+
+  //options
+  var options4 = {
+  responsive: true,
+  title: {
+   display: true,
+   position: "top",
+   fontSize: 18,
+   fontColor: "#111"
+  },
+  legend: {
+   display: true,
+   position: "bottom",
+   labels: {
+     fontColor: "#333",
+     fontSize: 16
+   }
+  },
+  animation: {
+  easing: "easeInOutBack",
+  duration: 1220
+  },
+  legend: {
+    display: true,
+    labels:{
+      fontColor:"#f7f7f7"
+    }
+  },
+  scales: {
+              yAxes: [{
+                  ticks: {
+                      beginAtZero	:true,
+                      fontColor: "#f7f7f7"
+                  }
+              }],
+              xAxes: [{
+                  ticks: {
+                      fontColor: "#f7f7f7"
+                  }
+              }]
+          },
+  tooltips: {
+    titleFontFamily: 'Open Sans',
+    backgroundColor: 'rgba(0,0,0,0.3)',
+    titleFontColor: 'red',
+    caretSize: 5,
+    cornerRadius: 1,
+    xPadding: 10,
+    yPadding: 10
+  }
+  };
+
+  //create Chart class object
+  var chart4 = new Chart(ctx4, {
+  type: "bar",
+  data: data4,
+  options: options4
+  });
+  </script>
+
+
+
+  <!-- Indian equities -->
+  <script >
+
+  var ctx5 = $("#lineChart5");
+
+  //line chart data
+  var data5 = {
+  labels:['TCS','ICICI','HDFC','INFY','L&T','RELIANCE'],
+  datasets: [
+   {
+     label:"Live Market Performance (PnL in INR)",
+     data: {{diff3}},
+     backgroundColor: [
+                  'rgba(255, 99, 132, 0.2)',
+                  'rgba(54, 162, 235, 0.2)',
+                  'rgba(255, 206, 86, 0.2)',
+                  'rgba(75, 192, 192, 0.2)',
+                  'rgba(153, 102, 255, 0.2)',
+                  'rgba(255, 159, 64, 0.2)'
+              ],
+              borderColor: [
+                  'rgba(255, 99, 132, 1)',
+                  'rgba(54, 162, 235, 1)',
+                  'rgba(255, 206, 86, 1)',
+                  'rgba(75, 192, 192, 1)',
+                  'rgba(153, 102, 255, 1)',
+                  'rgba(255, 159, 64, 1)'
+              ],
+              borderWidth: 1
+   }
+  ]
+  };
+
+  //options
+  var options5 = {
+  responsive: true,
+  title: {
+   display: true,
+   position: "top",
+   fontSize: 18,
+   fontColor: "#111"
+  },
+  legend: {
+   display: true,
+   position: "bottom",
+   labels: {
+     fontColor: "#333",
+     fontSize: 16
+   }
+  },
+  animation: {
+  easing: "easeInOutBack",
+  duration: 1220
+  },
+  legend: {
+    display: true,
+    labels:{
+      fontColor:"#f7f7f7"
+    }
+  },
+  scales: {
+              yAxes: [{
+                  ticks: {
+                      beginAtZero	:true,
+                      fontColor: "#f7f7f7"
+                  }
+              }],
+              xAxes: [{
+                  ticks: {
+                      fontColor: "#f7f7f7"
+                  }
+              }]
+          }
+  };
+
+  //create Chart class object
+  var chart5 = new Chart(ctx5, {
+  type: "bar",
+  data: data5,
+  options: options5
+  });
+  </script>
+
+</body>
+
+</html>
