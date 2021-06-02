@@ -31,6 +31,6 @@ six==1.14.0
 soupsieve==2.0
 sqlparse==0.3.1
 Unidecode==1.1.1
-urllib3==1.25.9
+urllib3==1.26.5
 yarl==1.4.2
 yfinance==0.1.54
